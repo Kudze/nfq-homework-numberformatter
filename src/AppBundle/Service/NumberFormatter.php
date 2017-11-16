@@ -14,44 +14,25 @@ class NumberFormatter
     public function format(float $num) : string
     {
 
-        //Force only positive numbers and remember
-        //if it originally was positive or negative number/
-        $isNegative = $num < 0;
-        if($isNegative)
-            $num = -$num;
-
         //Then goes the main part of conversion.
-        if($num >= 999500)
-            $result =
-                sprintf('%.2fM',
-                    $num / 1000000);
+        if(abs($num) >= 999500)
+            return sprintf('%.2fM',
+                    round($num / 1000000, 2));
 
-        else if($num >= 99950)
-            $result =
-                sprintf('%.0fK',
-                    $num / 1000);
+        if(abs($num) >= 99950)
+            return sprintf('%dK',
+                    round($num / 1000));
 
-        else if($num >= 1000)
-            $result =
-                sprintf('%.0f %.0f',
-                    floor($num / 1000),
-                    round($num) % 1000);
+        if(abs($num) >= 950)
+            return sprintf('%d %\'.03d',
+                intval($num / 1000), //Using it instead of floor since it takes closest number to 0
+                round(abs($num)) % 1000);
 
-        else if($num % 1 === 0)
-            $result =
-                sprintf('%.2f',
-                    $num);
+        if(abs($num) % 1 === 0)
+            return sprintf('%.2f',
+                    round($num, 2));
 
-        else
-            $result =
-                sprintf('%.2f',
-                    $num);
-
-        //Then we handle negative numbers
-        if($isNegative)
-            $result = '-' . $result;
-
-        return $result;
+        return sprintf('%.2f', $num);
     }
 
 }
